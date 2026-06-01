@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\Foto;
+use Illuminate\Support\Facades\Schema;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,14 @@ class LoginController extends Controller
         return view('user.fotos');
     }
     public function videos(){
-        return view('user.videos');
+        // If the videos table doesn't exist (migrations not run), return an empty collection
+        if (!Schema::hasTable('videos')) {
+            $videos = collect();
+        } else {
+            $videos = \App\Models\Video::latest()->get();
+        }
+
+        return view('user.videos', compact('videos'));
     }
     public function comentarios(){
         return view('user.comentarios');
@@ -121,12 +129,34 @@ class LoginController extends Controller
         return redirect()->route('login')->with('success', 'Deslogado com sucesso!');
     }
 
-public function galeria()
+public function galeria(\Illuminate\Http\Request $request)
     {
-        // 1. Buscar todas as fotos
-        $fotos = Foto::all(); // Agora a classe Foto será reconhecida.
- 
-        // 2. Passar a variável $fotos para a view
-        return view('user.galeria', compact('fotos')); 
+        $category = $request->get('category', null);
+        $search = $request->get('search', null);
+        
+        // 1. Buscar fotos com filtros
+        $fotos = Foto::when($category, function ($query) use ($category) {
+            return $query->where('category', $category);
+        })
+        ->when($search, function ($query) use ($search) {
+            return $query->where('description', 'like', '%' . $search . '%');
+        })
+        ->latest()
+        ->get();
+        
+        // 2. Definir categorias disponíveis
+        $categories = Foto::$categories ?? [
+            'geral' => 'Geral',
+            'apresentacoes' => 'Apresentações',
+            'danca' => 'Dança',
+            'musica' => 'Música',
+            'poesia' => 'Poesia',
+            'artes-visuais' => 'Artes Visuais',
+            'bastidores' => 'Bastidores',
+            'publico' => 'Público',
+        ];
+        
+        // 3. Passar variáveis para a view
+        return view('user.galeria', compact('fotos', 'categories', 'category', 'search')); 
     }
 }

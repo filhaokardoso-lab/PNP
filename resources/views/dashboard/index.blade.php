@@ -1,180 +1,230 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('content')
-<main>
-    {{-- CSS direto aqui dentro --}}
+<div class="dashboard-page">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         :root {
-            --primary-color: #c41e3a;
-            --primary-dark: #8b0000;
-            --background-color: #f5e6d3;
-            --text-color: #2c1810;
-            --hover-color: #d64d4d;
+            --bg: #f4f6fb;
+            --surface: #ffffff;
+            --surface-alt: #f8fafc;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #ef4444;
+            --accent-dark: #dc2626;
+            --shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
         }
 
-        * {
+        .dashboard-page {
+            width: 100%;
+            min-height: calc(100vh - 5.5rem);
+            padding: 1rem 2rem 2rem;
+            background: var(--bg);
+        }
+
+        .dashboard-header {
+            margin-bottom: 1.75rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2rem;
+            margin: 0 0 0.25rem;
+            color: var(--text);
+        }
+
+        .dashboard-header p {
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            color: var(--muted);
+            font-size: 0.95rem;
         }
 
-        body {
-            background-color: var(--background-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .page-title {
-            text-align: center;
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .description {
-            text-align: center;
-            color: var(--text-color);
-            font-size: 1.2rem;
-            margin-bottom: 3rem;
-            opacity: 0.8;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 3rem;
-        }
-
-        section {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        section h2 {
-            color: var(--primary-color);
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .content p {
-            color: var(--text-color);
-            line-height: 1.6;
-            text-align: justify;
-        }
-
-        .info-grid {
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.75rem;
         }
 
-        .info-card {
-            text-align: center;
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
             padding: 1.5rem;
-            border-radius: 10px;
-            background: var(--background-color);
-            transition: transform 0.3s ease;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .info-card:hover {
-            transform: translateY(-5px);
+        .stat-card .stat-label {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-top: 0.75rem;
         }
 
-        .info-card i {
+        .stat-card .stat-number {
             font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
+            font-weight: 700;
+            color: var(--text);
         }
 
-        .info-card h3 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .info-card p {
-            color: var(--text-color);
-            font-size: 0.9rem;
-        }
-
-        .destaque-grid {
+        .charts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 1.5rem;
         }
 
-        .destaque-grid img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 10px;
-            transition: transform 0.3s ease;
+        .chart-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            min-height: 360px;
         }
 
-        .destaque-grid img:hover {
-            transform: scale(1.05);
+        .chart-card.full-width {
+            grid-column: 1 / -1;
         }
 
-        @media (max-width: 768px) {
-            .info-grid {
+        .chart-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .chart-card-header h2 {
+            font-size: 1rem;
+            margin: 0;
+            color: var(--text);
+        }
+
+        .chart-card canvas {
+            width: 100% !important;
+            height: 320px !important;
+        }
+
+        .chart-empty {
+            margin-top: 1rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid,
+            .charts-grid {
                 grid-template-columns: 1fr;
             }
+        }
 
-            .destaque-grid {
-                grid-template-columns: 1fr;
+        @media (max-width: 640px) {
+            .dashboard-page {
+                padding: 1rem;
+            }
+
+            .stat-card {
+                padding: 1.25rem;
+            }
+
+            .chart-card {
+                min-height: 300px;
+                padding: 1.25rem;
             }
         }
     </style>
 
-    {{-- Conteúdo --}}
-    <h1 class="page-title">Bem-vindo ao Afro-Sarau 2025</h1>
-    <p class="description">Celebrando nossa cultura e arte</p>
-
-    <div class="container">
-        <section class="sobre-sarau">
-            <h2>Sobre o Sarau</h2>
-            <div class="content">
-                <p>O Afro-Sarau é um evento cultural que celebra a riqueza e diversidade da cultura afro-brasileira através da arte, música, dança e poesia. Um espaço de expressão, reconhecimento e valorização de nossa identidade.</p>
-            </div>
-        </section>
-
-        <section class="mais-info">
-            <h2>Programação</h2>
-            <div class="info-grid">
-                <div class="info-card">
-                    <i class='bx bx-music'></i>
-                    <h3>Música</h3>
-                    <p>Apresentações musicais com ritmos africanos e afro-brasileiros</p>
-                </div>
-                <div class="info-card">
-                    <i class='bx bx-book-open'></i>
-                    <h3>Poesia</h3>
-                    <p>Sarau de poesia com artistas locais</p>
-                </div>
-                <div class="info-card">
-                    <i class='bx bx-movie-play'></i>
-                    <h3>Dança</h3>
-                    <p>Apresentações de dança contemporânea e tradicional</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="destaques">
-            <h2>Destaques</h2>
-            <div class="destaque-grid">
-                <img src="" alt="Apresentação Musical">
-                <img src="" alt="Dança Tradicional">
-                <img src="" alt="Artistas">
-            </div>
-        </section>
+    <div class="dashboard-header">
+        <h1>Painel de Indicadores</h1>
+        <p>Os gráficos já estão prontos para receber dados. Preencha as informações para visualizar o desempenho do patrimônio.</p>
     </div>
-</main>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Total de Patrimônios</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Ativos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Inativos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">R$ 0,00</div>
+            <div class="stat-label">Valor Total (R$)</div>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h2>Patrimônios por Categoria</h2>
+            </div>
+            <canvas id="categoryChart"></canvas>
+            <div class="chart-empty">Sem dados no momento</div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h2>Patrimônios por Setor</h2>
+            </div>
+            <canvas id="sectorChart"></canvas>
+            <div class="chart-empty">Sem dados no momento</div>
+        </div>
+
+        <div class="chart-card full-width">
+            <div class="chart-card-header">
+                <h2>Evolução do Patrimônio (Valor Total)</h2>
+            </div>
+            <canvas id="lineChart"></canvas>
+            <div class="chart-empty">Sem dados no momento</div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const buildChart = (ctx, config) => {
+        if (!ctx) return;
+        return new Chart(ctx, config);
+    };
+
+    const basicOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false },
+        },
+        scales: {
+            x: { display: true, grid: { color: '#f1f5f9' } },
+            y: { display: true, beginAtZero: true, grid: { color: '#f1f5f9' } },
+        },
+    };
+
+    buildChart(document.getElementById('categoryChart'), {
+        type: 'doughnut',
+        data: { labels: [], datasets: [{ data: [], backgroundColor: ['#ef4444', '#f97316', '#eab308', '#10b981', '#3b82f6'] }] },
+        options: Object.assign({}, basicOptions, { plugins: { legend: { display: true, position: 'bottom' }, tooltip: { enabled: false } } }),
+    });
+
+    buildChart(document.getElementById('sectorChart'), {
+        type: 'bar',
+        data: { labels: [], datasets: [{ label: '', data: [], backgroundColor: '#3b82f6' }] },
+        options: Object.assign({}, basicOptions, { plugins: { legend: { display: false } } }),
+    });
+
+    buildChart(document.getElementById('lineChart'), {
+        type: 'line',
+        data: { labels: [], datasets: [{ label: '', data: [], borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.15)', tension: 0.35, fill: true }] },
+        options: Object.assign({}, basicOptions, { plugins: { legend: { display: false } } }),
+    });
+</script>
 @endsection

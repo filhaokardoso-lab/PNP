@@ -1,185 +1,89 @@
 @extends('layouts.auth')
 
 @section('content')
-    <div class="container">
-        <form action="{{ route('login.store-user') }}" method="POST">
-            @csrf
-            @method('POST')
-
-            <h1>Registrar-se</h1>
-            <x-alert />
-
-            <!-- Nome -->
-            <div class="input-box">
-                <input type="text" name="name" id="name" 
-                       placeholder="Digite seu nome completo" value="{{ old('name') }}" required>
-                <i class='bx bxs-user'></i>
+    <div class="login-layout">
+        <div class="login-card">
+            <div class="login-left">
+                <div class="logo-wrap">
+                    <img src="{{ asset('img/onaarandupng.png') }}" alt="Projeto PNP" class="logo-large">
+                </div>
             </div>
 
-            <!-- E-mail -->
-            <div class="input-box">
-                <input type="email" name="email" id="email" 
-                       placeholder="Digite seu e-mail" value="{{ old('email') }}" required>
-                <i class='bx bx-envelope'></i>
-            </div>
+            <div class="login-right">
+                <form action="{{ route('login.store-user') }}" method="POST">
+                    @csrf
+                    @method('POST')
 
-            <!-- Senha -->
-            <div class="input-box">
-                <input type="password" name="password" id="password" 
-                       placeholder="Senha com no mínimo 6 caracteres" required>
-                <i class='bx bxs-lock-alt' role="button" onclick="togglePassword('password', this)"></i>
-            </div>
+                    <h1 class="login-title">Cadastrar</h1>
+                    <x-alert />
 
-            <!-- Confirmar Senha -->
-            <div class="input-box">
-                <input type="password" name="password_confirmation" id="password_confirmation" 
-                       placeholder="Confirme sua senha" required>
-                <i class='bx bxs-lock-alt' role="button" onclick="togglePassword('password_confirmation', this)"></i>
-            </div>
+                    <div class="input-box">
+                        <input type="text" name="name" id="name" placeholder="Nome completo" value="{{ old('name') }}" required>
+                        <i class='bx bxs-user'></i>
+                    </div>
 
-            <!-- Termos -->
-            <div class="remember-forgot">
-                <label><input type="checkbox" required> Aceito os termos e condições</label>
-            </div>
+                    <div class="input-box">
+                        <input type="email" name="email" id="email" placeholder="E-mail" value="{{ old('email') }}" required>
+                        <i class='bx bx-envelope'></i>
+                    </div>
 
-            <!-- Botão -->
-            <button type="submit" class="btn">Cadastrar</button>
+                    <div class="input-box">
+                        <input type="password" name="password" id="password" placeholder="Senha (mín. 6)" required>
+                        <i class='bx bxs-lock-alt' role="button" onclick="togglePassword('password', this)"></i>
+                    </div>
 
-            <!-- Link Login -->
-            <div class="register-link">
-                <p>Já tem uma conta? 
-                    <a href="{{ route('login') }}">Fazer login</a>
-                </p>
+                    <div class="input-box">
+                        <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirmar senha" required>
+                        <i class='bx bxs-lock-alt' role="button" onclick="togglePassword('password_confirmation', this)"></i>
+                    </div>
+
+                    <div class="remember-forgot">
+                        <label><input type="checkbox" required> Aceito os termos e condições</label>
+                    </div>
+
+                    <button type="submit" class="btn">Cadastrar</button>
+
+                    <div class="register-link">
+                        <p>Já tem uma conta? <a href="{{ route('login') }}">Fazer login</a></p>
+                    </div>
+
+                    <div class="guest-link"><a href="{{ route('dashboard.index') }}" class="guest-btn">Entrar sem conta</a></div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 
     <style>
-        :root {
-            --primary-color: #c41e3a;
-            --primary-dark: #8b0000;
-            --background-color: #f5e6d3;
-            --text-color: #2c1810;
-            --hover-color: #d64d4d;
-        }
+        :root{--primary:#c41e3a;--dark:#8b0000;--bg:#f5e6d3;--text:#2c1810}
+        body{background:#8b0000;margin:0;padding:20px;display:flex;align-items:center;justify-content:center}
+        .login-layout{width:100%;max-width:1000px}
+        .login-card{display:flex;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+        .login-left{flex:1;background:var(--dark);display:flex;align-items:center;justify-content:center;padding:40px}
+        .logo-wrap{max-width:420px;width:100%;text-align:center}
+        .logo-large{width:100%;height:auto;max-width:420px}
+        .login-right{flex:1;background:var(--bg);padding:48px 40px;display:flex;align-items:center;justify-content:center}
+        form{width:100%;max-width:360px}
+        .login-title{color:var(--primary);font-size:32px;margin:0 0 18px;font-weight:800;text-align:right}
+        .input-box{position:relative;margin:18px 0}
+        .input-box input{width:100%;padding:14px 18px;border-radius:12px;border:2px solid var(--primary);background:transparent;color:var(--text);outline:none}
+        .input-box i{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--primary)}
+        .remember-forgot{display:flex;justify-content:flex-start;font-size:14px;margin:12px 0;color:var(--text)}
+        .btn{width:100%;padding:12px;border-radius:10px;border:none;background:var(--primary);color:#fff;font-weight:700;margin-top:8px}
+        .register-link{margin-top:14px;text-align:center;color:var(--text)}
+        .register-link a{color:var(--primary);font-weight:700}
+        .guest-link{margin-top:10px;text-align:center}
+        .guest-btn{display:inline-block;padding:8px 16px;border-radius:10px;border:2px solid var(--primary);color:var(--primary);text-decoration:none;font-weight:700;background:transparent}
+        .guest-btn:hover{background:var(--primary);color:#fff}
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #8b0000;
-        }
-
-        .container {
-            width: 420px;
-            background: var(--background-color);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .container h1 {
-            font-size: 36px;
-            text-align: center;
-            margin-bottom: 40px;
-            color: var(--primary-color);
-        }
-
-        .input-box {
-            position: relative;
-            width: 100%;
-            height: 50px;
-            margin: 30px 0;
-        }
-
-        .input-box input {
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            border: 2px solid var(--primary-color);
-            border-radius: 25px;
-            outline: none;
-            padding: 20px 45px 20px 20px;
-            font-size: 16px;
-            color: var(--text-color);
-            transition: all 0.3s ease;
-        }
-
-        .input-box input:focus {
-            border-color: var(--primary-dark);
-        }
-
-        .input-box i {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 20px;
-            color: var(--primary-color);
-            cursor: pointer;
-        }
-
-        .remember-forgot {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14.5px;
-            margin: 15px 0 25px;
-            color: var(--text-color);
-        }
-
-        .remember-forgot label input {
-            accent-color: var(--primary-color);
-            margin-right: 4px;
-        }
-
-        .btn {
-            width: 100%;
-            height: 45px;
-            background: var(--primary-color);
-            border: none;
-            outline: none;
-            border-radius: 25px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .register-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14.5px;
-            color: var(--text-color);
-        }
-
-        .register-link p a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .register-link p a:hover {
-            text-decoration: underline;
+        @media(max-width:880px){
+            .login-card{flex-direction:column}
+            .login-left{padding:28px}
+            .login-right{padding:28px}
+            .login-title{text-align:center}
         }
     </style>
 
     <script>
-        function togglePassword(fieldId, icon) {
-            const input = document.getElementById(fieldId);
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.replace("bxs-lock-alt", "bxs-lock-open-alt");
-            } else {
-                input.type = "password";
-                icon.classList.replace("bxs-lock-open-alt", "bxs-lock-alt");
-            }
-        }
+        function togglePassword(fieldId, icon){const input=document.getElementById(fieldId);if(input.type==='password'){input.type='text';icon.classList.replace('bxs-lock-alt','bxs-lock-open-alt')}else{input.type='password';icon.classList.replace('bxs-lock-open-alt','bxs-lock-alt')}}
     </script>
 @endsection

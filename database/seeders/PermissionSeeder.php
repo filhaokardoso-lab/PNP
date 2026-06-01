@@ -25,6 +25,7 @@ class PermissionSeeder extends Seeder
             'update-role-permission',
             'profile-user',
             'index-foto',
+            'destroy-comentario',
         ];
 
         foreach ($permissions as $permission) {

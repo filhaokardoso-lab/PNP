@@ -9,10 +9,45 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>SESI SENAI SP</title>   
+    <style>
+      header {
+        background-color: #212529;
+        color: #fff;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 50;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      header.hidden {
+        transform: translateY(-100%);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      @media (max-width: 768px) {
+        header {
+          flex-direction: column;
+          gap: 0.5rem;
+          padding: 0.75rem 1rem;
+        }
+      }
+    </style>
 </head>
 <body>
     
-    <header class="text-bg-dark d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+    <header id="header" class="text-bg-dark d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 border-bottom">
         <div class="col-md-3 mb-2 mb-md-0">
           <a href="" class="d-inline-flex link-body-emphasis text-decoration-none">
             <img src="{{ asset('images/SESISENAI.png') }}" alt="Logo SENAI" width="120" height="auto" class="img-fluid">
@@ -50,13 +85,42 @@
         </ul>
   
         <div class="col-md-3 text-end">
-           <span class="small">Usuário Logado: {{ auth()->user()->name }}</span>
-           <a href="{{ route('login.destroy') }}" class="btn btn-outline-light me-2">Sair</a>
+          @if(auth()->check())
+            <span class="small">Usuário Logado: {{ auth()->user()->name }}</span>
+            <a href="{{ route('login.destroy') }}" class="btn btn-outline-light me-2">Sair</a>
+          @else
+            <a href="{{ route('login') }}" class="btn btn-outline-light me-2">Login</a>
+          @endif
         </div>
       </header>
 
-      <div class="container">
+        <div class="container" style="margin-top: 70px;">
           @yield('content')
       </div>
+
+      @include('layouts.footer')
+      <script>
+        const header = document.getElementById('header');
+        let lastScrollY = 0;
+        let scrollDirection = 'up';
+
+        window.addEventListener('scroll', () => {
+          const currentScrollY = window.scrollY;
+
+          if (currentScrollY > lastScrollY) {
+            scrollDirection = 'down';
+          } else {
+            scrollDirection = 'up';
+          }
+
+          if (scrollDirection === 'down' && currentScrollY > 100) {
+            header.classList.add('hidden');
+          } else {
+            header.classList.remove('hidden');
+          }
+
+          lastScrollY = currentScrollY;
+        });
+      </script>
 </body>
 </html>

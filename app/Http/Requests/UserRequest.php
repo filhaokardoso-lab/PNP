@@ -24,11 +24,22 @@ class UserRequest extends FormRequest
     {
         $userID = $this->route('user');
 
-        return [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . ($userID ? $userID->id : null),
-            // 'password' => 'required|confirmed|min:6', //mínimo 6 caracteres
-        ];
+            $rules = [
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email,' . ($userID ? $userID->id : null),
+            ];
+
+            // Se for criação (sem $userID) exigir senha e confirmação
+            if (!$userID) {
+                $rules['password'] = 'required|confirmed|min:6';
+            } else {
+                // Se for edição: apenas validar senha quando informada
+                if ($this->filled('password')) {
+                    $rules['password'] = 'nullable|confirmed|min:6';
+                }
+            }
+
+            return $rules;
     }
 
     //Traduzir as mensagens de validação do formulário

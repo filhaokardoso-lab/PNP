@@ -54,8 +54,17 @@ class RoleSeeder extends Seeder
                 'name' => 'Aluno',
             ]);
 
-            //Regra de permissão para o papel            
-            $aluno->givePermissionTo([]);
+            // Regra de permissão para o papel Aluno: permitir ver o próprio perfil
+            $aluno->givePermissionTo([
+                'show-user',
+                'profile-user',
+            ]);
+        } else {
+            // Se o papel já existe, garantir que tenha a permissão 'show-user'
+            $aluno = Role::where('name', 'Aluno')->first();
+            if ($aluno && !$aluno->hasPermissionTo('show-user')) {
+                $aluno->givePermissionTo('show-user');
+            }
         }
     }
 }
