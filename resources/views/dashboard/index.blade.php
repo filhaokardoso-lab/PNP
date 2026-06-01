@@ -145,19 +145,19 @@
 
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-number">0</div>
+            <div class="stat-number">{{ number_format($total, 0, ',', '.') }}</div>
             <div class="stat-label">Total de Patrimônios</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">0</div>
+            <div class="stat-number">{{ number_format($ativos, 0, ',', '.') }}</div>
             <div class="stat-label">Ativos</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">0</div>
+            <div class="stat-number">{{ number_format($inativos, 0, ',', '.') }}</div>
             <div class="stat-label">Inativos</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">R$ 0,00</div>
+            <div class="stat-number">R$ {{ number_format($valorTotal, 2, ',', '.') }}</div>
             <div class="stat-label">Valor Total (R$)</div>
         </div>
     </div>
@@ -168,7 +168,9 @@
                 <h2>Patrimônios por Categoria</h2>
             </div>
             <canvas id="categoryChart"></canvas>
-            <div class="chart-empty">Sem dados no momento</div>
+            @unless(count($categories) > 0)
+                <div class="chart-empty">Sem dados no momento</div>
+            @endunless
         </div>
 
         <div class="chart-card">
@@ -176,7 +178,9 @@
                 <h2>Patrimônios por Setor</h2>
             </div>
             <canvas id="sectorChart"></canvas>
-            <div class="chart-empty">Sem dados no momento</div>
+            @unless(count($sectors) > 0)
+                <div class="chart-empty">Sem dados no momento</div>
+            @endunless
         </div>
 
         <div class="chart-card full-width">
@@ -184,7 +188,9 @@
                 <h2>Evolução do Patrimônio (Valor Total)</h2>
             </div>
             <canvas id="lineChart"></canvas>
-            <div class="chart-empty">Sem dados no momento</div>
+            @unless(count($evolution) > 0)
+                <div class="chart-empty">Sem dados no momento</div>
+            @endunless
         </div>
     </div>
 </div>
@@ -209,22 +215,60 @@
         },
     };
 
+    const categoryLabels = @json(array_keys($categories));
+    const categoryData = @json(array_values($categories));
+    const sectorLabels = @json(array_keys($sectors));
+    const sectorData = @json(array_values($sectors));
+    const evolutionLabels = @json(array_keys($evolution));
+    const evolutionData = @json(array_values($evolution));
+
     buildChart(document.getElementById('categoryChart'), {
         type: 'doughnut',
-        data: { labels: [], datasets: [{ data: [], backgroundColor: ['#ef4444', '#f97316', '#eab308', '#10b981', '#3b82f6'] }] },
-        options: Object.assign({}, basicOptions, { plugins: { legend: { display: true, position: 'bottom' }, tooltip: { enabled: false } } }),
+        data: {
+            labels: categoryLabels,
+            datasets: [{
+                data: categoryData,
+                backgroundColor: ['#ef4444', '#f97316', '#eab308', '#10b981', '#3b82f6', '#8b5cf6', '#14b8a6']
+            }]
+        },
+        options: Object.assign({}, basicOptions, {
+            plugins: { legend: { display: categoryLabels.length > 0, position: 'bottom' }, tooltip: { enabled: true } }
+        }),
     });
 
     buildChart(document.getElementById('sectorChart'), {
         type: 'bar',
-        data: { labels: [], datasets: [{ label: '', data: [], backgroundColor: '#3b82f6' }] },
-        options: Object.assign({}, basicOptions, { plugins: { legend: { display: false } } }),
+        data: {
+            labels: sectorLabels,
+            datasets: [{
+                label: 'Patrimônios por Setor',
+                data: sectorData,
+                backgroundColor: '#3b82f6'
+            }]
+        },
+        options: Object.assign({}, basicOptions, {
+            plugins: { legend: { display: true, position: 'bottom' }, tooltip: { enabled: true } },
+            scales: { y: { beginAtZero: true }, x: { ticks: { autoSkip: false } } }
+        }),
     });
 
     buildChart(document.getElementById('lineChart'), {
         type: 'line',
-        data: { labels: [], datasets: [{ label: '', data: [], borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.15)', tension: 0.35, fill: true }] },
-        options: Object.assign({}, basicOptions, { plugins: { legend: { display: false } } }),
+        data: {
+            labels: evolutionLabels,
+            datasets: [{
+                label: 'Valor Total por Mês (R$)',
+                data: evolutionData,
+                borderColor: '#ef4444',
+                backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                tension: 0.35,
+                fill: true
+            }]
+        },
+        options: Object.assign({}, basicOptions, {
+            plugins: { legend: { display: true, position: 'bottom' }, tooltip: { enabled: true } },
+            scales: { y: { beginAtZero: true, ticks: { callback: function(value) { return 'R$ ' + value.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}); } } } }
+        }),
     });
 </script>
 @endsection

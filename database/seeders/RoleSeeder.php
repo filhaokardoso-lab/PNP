@@ -10,29 +10,32 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        //Verifica se o papel Super Admin esta cadastrado caso contrário ele cadastrado esse papel
-        if (!Role::where('name', 'Administrador')->first()) {
-            $admin = Role::create([
-                'name' => 'Administrador',
-            ]);
+        //Verifica se o papel Administrador esta cadastrado e garante todas as permissões necessárias
+        $adminPermissions = [
+            'index-user',
+            'show-user',
+            'create-user',
+            'edit-user',
+            'destroy-user',
+            'index-role',
+            'create-role',
+            'edit-role',
+            'destroy-role',
+            'index-role-permission',
+            'update-role-permission',
+            'profile-user',
+            'index-foto',
+            'index-patrimonio',
+            'create-patrimonio',
+            'edit-patrimonio',
+            'destroy-patrimonio',
+        ];
 
-            //Regra de permissão para o papel
-            $admin->givePermissionTo([
-                'index-user',
-                'show-user',
-                'create-user',
-                'edit-user',
-                'destroy-user',
-                'index-role',
-                'create-role',
-                'edit-role',
-                'destroy-role',
-                'index-role-permission',
-                'update-role-permission',
-                'profile-user',
-                'index-foto',
-            ]);
-        }
+        $admin = Role::firstOrCreate([
+            'name' => 'Administrador',
+        ]);
+
+        $admin->givePermissionTo($adminPermissions);
 
         //Verifica se o papel Professor esta cadastrado caso contrário ele cadastrado esse papel
         if (!Role::where('name', 'Professor')->first()) {

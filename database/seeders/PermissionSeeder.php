@@ -26,6 +26,10 @@ class PermissionSeeder extends Seeder
             'profile-user',
             'index-foto',
             'destroy-comentario',
+            'index-patrimonio',
+            'create-patrimonio',
+            'edit-patrimonio',
+            'destroy-patrimonio',
         ];
 
         foreach ($permissions as $permission) {

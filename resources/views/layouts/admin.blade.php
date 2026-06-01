@@ -280,15 +280,20 @@
                     <li><a href="{{ route('user.create') }}"><i class="bi bi-person-plus-fill"></i>Cadastrar Usuário</a></li>
                     @endcan
 
-                    @can('create-user')
-                    <li><a href="{{ route('user.create') }}"><i class="bi bi-person-plus-fill"></i>Cadastrar Patrimônio</a></li>
+                    @can('index-patrimonio')
+                    <li><a href="{{ route('patrimonios.index') }}"><i class="bi bi-search"></i>Consultar Patrimônio</a></li>
                     @endcan
 
-                    @can('create-user')
-                    <li><a href="{{ route('user.create') }}"><i class="bi bi-person-plus-fill"></i>Alterações</a></li>
+                    @can('create-patrimonio')
+                    <li><a href="{{ route('patrimonios.create') }}"><i class="bi bi-person-plus-fill"></i>Cadastrar Patrimônio</a></li>
                     @endcan
-                    @can('create-user')
-                    <li><a href="{{ route('user.create') }}"><i class="bi bi-person-plus-fill"></i>Inventário</a></li>
+
+                    @can('edit-patrimonio')
+                    <li><a href="{{ route('patrimonios.index') }}"><i class="bi bi-pencil-square"></i>Alterações</a></li>
+                    @endcan
+
+                    @can('index-patrimonio')
+                    <li><a href="{{ route('patrimonios.inventory') }}"><i class="bi bi-list-check"></i>Inventário</a></li>
                     @endcan
 
                     @can('create-user')

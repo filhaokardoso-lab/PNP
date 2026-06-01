@@ -10,6 +10,7 @@ use App\Http\Controllers\ComentarioCurtidaController;
 use App\Http\Controllers\ComentarioRespostaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FotoController;
+use App\Http\Controllers\PatrimonioController;
 
 //Rotas públicas
 // A rota raiz agora é o dashboard (index) — pública (acessa mesmo sem conta)
@@ -69,6 +70,24 @@ Route::group(['middleware' => 'auth'], function () {
         //Rota para Criar Usuário (Create)
         Route::get('/create-user', [userController::class, 'create'])->name('user.create')->middleware('permission:create-user');
         Route::post('/store-user', [userController::class, 'store'])->name('user.store')->middleware('permission:create-user');
+        
+        //Rota para Inventário de Patrimônios
+        Route::get('/inventario', [PatrimonioController::class, 'inventory'])->name('patrimonios.inventory')->middleware('permission:index-patrimonio');
+        Route::get('/inventario/export', [PatrimonioController::class, 'exportInventory'])->name('patrimonios.inventory.export')->middleware('permission:index-patrimonio');
+        Route::post('/inventario/finalizar', [PatrimonioController::class, 'finalizeInventory'])->name('patrimonios.inventory.finalize')->middleware('permission:index-patrimonio');
+
+        //Rota para Consultar Patrimônios
+        Route::get('/patrimonios', [PatrimonioController::class, 'index'])->name('patrimonios.index')->middleware('permission:index-patrimonio');
+
+        //Rota para Criar Patrimônio (Create)
+        Route::get('/create-patrimonio', [PatrimonioController::class, 'create'])->name('patrimonios.create')->middleware('permission:create-patrimonio');
+        Route::post('/store-patrimonio', [PatrimonioController::class, 'store'])->name('patrimonios.store')->middleware('permission:create-patrimonio');
+
+        //Rota para Editar Patrimônio (Update)
+        Route::get('/edit-patrimonio/{patrimonio}', [PatrimonioController::class, 'edit'])->name('patrimonios.edit')->middleware('permission:edit-patrimonio');
+        Route::put('/update-patrimonio/{patrimonio}', [PatrimonioController::class, 'update'])->name('patrimonios.update')->middleware('permission:edit-patrimonio');
+        Route::delete('/destroy-patrimonio/{patrimonio}', [PatrimonioController::class, 'destroy'])->name('patrimonios.destroy')->middleware('permission:destroy-patrimonio');
+        
         //Rota para Visualizar Usuário (Read)
         Route::get('/show-user/{user}', [userController::class, 'show'])->name('user.show')->middleware('permission:show-user');
         //Rota para Editar Usuário (Create)

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use App\Models\Patrimonio;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use PhpParser\Node\Expr\FuncCall;
@@ -51,7 +52,45 @@ class UserController extends Controller
         }
         
     public function painel(){
-        return view('dashboard.index');
+        $total = Patrimonio::count();
+        $ativos = Patrimonio::where('situacao', 'Ativo')->count();
+        $inativos = Patrimonio::where('situacao', 'Inativo')->count();
+        $valorTotal = Patrimonio::sum('valor_aquisicao');
+
+        $categories = Patrimonio::select('categoria')
+            ->selectRaw('count(*) as total')
+            ->whereNotNull('categoria')
+            ->where('categoria', '<>', '')
+            ->groupBy('categoria')
+            ->orderByDesc('total')
+            ->pluck('total', 'categoria')
+            ->toArray();
+
+        $sectors = Patrimonio::select('setor_localizacao')
+            ->selectRaw('count(*) as total')
+            ->whereNotNull('setor_localizacao')
+            ->where('setor_localizacao', '<>', '')
+            ->groupBy('setor_localizacao')
+            ->orderByDesc('total')
+            ->pluck('total', 'setor_localizacao')
+            ->toArray();
+
+        $evolution = Patrimonio::selectRaw("DATE_FORMAT(data_aquisicao, '%Y-%m') as mes")
+            ->selectRaw('SUM(valor_aquisicao) as total')
+            ->groupBy('mes')
+            ->orderBy('mes')
+            ->pluck('total', 'mes')
+            ->toArray();
+
+        return view('dashboard.index', compact(
+            'total',
+            'ativos',
+            'inativos',
+            'valorTotal',
+            'categories',
+            'sectors',
+            'evolution'
+        ));
     }
     
 
