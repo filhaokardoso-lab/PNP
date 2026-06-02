@@ -79,9 +79,6 @@
 
 
 
-          <li><a href="{{ route('user.galeria') }}" class="nav-link px-2">Galeria</a></li>
-          <li><a href="{{ route('user.videos') }}" class="nav-link px-2">Vídeos</a></li>
-          <li><a href="{{ route('user.comentarios') }}" class="nav-link px-2">Comentários</a></li>
         </ul>
   
         <div class="col-md-3 text-end">

@@ -32,9 +32,7 @@ class LoginController extends Controller
 
         return view('user.videos', compact('videos'));
     }
-    public function comentarios(){
-        return view('user.comentarios');
-    }
+ 
 
     public function loginProcess(LoginRequest $request)
     {

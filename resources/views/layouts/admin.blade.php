@@ -308,17 +308,6 @@
                     <li><a href="{{ route('user.create') }}"><i class="bi bi-person-plus-fill"></i>Configurações</a></li>
                     @endcan
 
-                    @can('index-foto')
-                    <!-- <li><a href="{{ route('fotos.create') }}"><i class="bi bi-image-fill"></i>Upload Fotos</a></li> -->
-                    @endcan
-
-                    @if(auth()->check() && auth()->user()->hasRole('Administrador'))
-                    <!-- <li><a href="{{ route('videos.create') }}"><i class="bi bi-camera-video-fill"></i>Upload Vídeos</a></li> -->
-                    @endif
-
-                    <!-- <li><a href="{{ route('user.galeria') }}"><i class="bi bi-images"></i>Galeria</a></li> -->
-                    <!-- <li><a href="{{ route('user.videos') }}"><i class="bi bi-play-circle-fill"></i>Vídeos</a></li> -->
-                    <!-- <li><a href="{{ route('user.comentarios') }}"><i class="bi bi-chat-dots-fill"></i>Comentários</a></li> -->
                 </ul>
             </nav>
 

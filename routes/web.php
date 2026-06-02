@@ -5,11 +5,7 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\userController;
-use App\Http\Controllers\ComentarioController;
-use App\Http\Controllers\ComentarioCurtidaController;
-use App\Http\Controllers\ComentarioRespostaController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FotoController;
 use App\Http\Controllers\PatrimonioController;
 
 //Rotas públicas
@@ -24,22 +20,13 @@ Route::get('/create-user-login', [LoginController::class, 'create'])->name('logi
 Route::post('/store-user-login', [LoginController::class, 'store'])->name('login.store-user');
 Route::get('/galeria', [LoginController::class, 'galeria'])->name('user.galeria');
 
-// Route::get('/fotos', [LoginController::class, 'fotos'])->name('user.fotos');
 Route::get('/videos', [LoginController::class, 'videos'])->name('user.videos');
 Route::get('/lista', [LoginController::class, 'lista'])->name('user.lista');
 Route::get('/comentarios', [ComentarioController::class, 'index'])->name('user.comentarios');
 Route::post('/comentarios', [ComentarioController::class, 'store'])->name('user.comentarios.store')->middleware('auth');
 Route::delete('/comentarios/{comentario}', [ComentarioController::class, 'destroy'])->name('user.comentarios.destroy')->middleware('auth');
 
-// Rotas para curtidas de comentários
-Route::post('/comentarios/{comentario}/curtida', [ComentarioCurtidaController::class, 'toggle'])->name('comentario.curtida.toggle')->middleware('auth');
-Route::get('/comentarios/{comentario}/curtidas/total', [ComentarioCurtidaController::class, 'totalCurtidas'])->name('comentario.curtidas.total');
-Route::get('/comentarios/{comentario}/curtidas/usuario', [ComentarioCurtidaController::class, 'usuarioCurtiu'])->name('comentario.curtidas.usuario')->middleware('auth');
 
-// Rotas para respostas de comentários
-Route::post('/comentarios/{comentario}/respostas', [ComentarioRespostaController::class, 'store'])->name('comentario.resposta.store')->middleware('auth');
-Route::get('/comentarios/{comentario}/respostas', [ComentarioRespostaController::class, 'index'])->name('comentario.respostas');
-Route::delete('/respostas/{resposta}', [ComentarioRespostaController::class, 'destroy'])->name('comentario.resposta.destroy')->middleware('auth');
 
 Route::get('/users', [LoginController::class, 'users'])->name('user.users');
 Route::get('/profile', [userController::class, 'profile'])->name('user.profile')->middleware('auth');
